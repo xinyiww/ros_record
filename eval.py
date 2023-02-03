@@ -63,7 +63,7 @@ for i, (gt_id, pred_id) in enumerate(id_gt2pred.items()):
         t_gt = txy_gt[0]
         pred = data_pred [ data_pred[:,0] <= t_gt]
         pred = pred [pred[:,0] >= t_gt - hrz]
-        # plt.scatter(txy_gt[1], txy_gt[2])
+        plt.scatter(txy_gt[1], txy_gt[2])
         if pred.shape[0] > 0 :
             for pred_traj in pred:
                 # linear interp
@@ -74,10 +74,10 @@ for i, (gt_id, pred_id) in enumerate(id_gt2pred.items()):
                 y_pred = np.interp(t_gt, np.linspace(t_start, t_start + hrz, 1+n_pred), ys)
                 running_sse += (txy_gt[0] - x_pred) **2 +  (txy_gt[1] - y_pred) **2
                 
-        #         plt.scatter(x_pred, y_pred, marker="x")
-        # plt.show()
-        # plt.clf()
-        # plt.legend()
+                plt.scatter(x_pred, y_pred, marker="x")
+        plt.show()
+        plt.clf()
+        plt.legend()
         pass
                 
         
