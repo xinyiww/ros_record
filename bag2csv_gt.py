@@ -71,11 +71,12 @@ with open(results_dir +"/"+filename+'_gt.csv', 'a', newline='') as gt_csv:
           for i, lane in enumerate(msg.vehicles):            
               for j, veh in enumerate(lane.vehicles): # some deplicates in the first round -- delete them
                   pos = veh.pose.pose.position   
-                  log_writer.writerow([t, veh_id, pos.x, pos.y] )
+                  
                   
                   if [pos.x, pos.y, t] not in pre_pos.values():
                     pre_pos[veh_id] = [pos.x, pos.y, t]
                     veh_id += 1
+                    log_writer.writerow([t, veh_id, pos.x, pos.y] )
                   
                   
                   
@@ -86,10 +87,11 @@ with open(results_dir +"/"+filename+'_gt.csv', 'a', newline='') as gt_csv:
                   pre_pos_old = pre_pos.copy()
                   pos = veh.pose.pose.position   
                   veh_id = assign_id(pos.x, pos.y,t, pre_pos_old, 1e-3, 1, 0.2) # (1e-3, -0.4693756103515625)
-                  log_writer.writerow([t, veh_id, pos.x, pos.y] )
+                  
                   
                   if [pos.x, pos.y, t] not in pre_pos.values():
                     pre_pos[veh_id] = [pos.x, pos.y, t]
+                    log_writer.writerow([t, veh_id, pos.x, pos.y] )
                   
                 
     # pred_csv.close()
