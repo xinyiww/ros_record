@@ -1,0 +1,4 @@
+# Ignore .bag files
+*.bag
+
+
