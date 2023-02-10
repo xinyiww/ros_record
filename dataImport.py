@@ -26,7 +26,7 @@ def getPredData(filename):
     sample = dat_str[0].split(' ')
     n_pred= int(sample[2])
     width = 4+4*n_pred
-    print(width)       
+    # print(width)       
     data = np.zeros([len(dat_str), width]) 
     for i in range(len(dat_str)):
         sample = dat_str[i].split(' ')
