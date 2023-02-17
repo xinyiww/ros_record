@@ -99,7 +99,7 @@ def bag2csv(filename, directory, isGT):
 
 if __name__ == "__main__":
 
-  filename = "t_jun_pred_gm"
+  filename = "t_jun_pred_idm"
   directory = "/home/xliu/Documents/ros_record/"
 
   bag2csv(filename, directory, isGT = True)
