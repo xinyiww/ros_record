@@ -21,22 +21,24 @@ def run_ADE_eval(folder_path, PLOT_ERROR_DIST=True, PLOT_ONE_TRAJECTORY = True, 
     if GT == []:
         print("No GT data found. End eval.")
     
-    if PLOT_ERROR_DIST:
+    if PLOT_ERROR_DIST and RUN_CALCULATION:
         fig_error= plt.figure(1)
         ax = fig_error.add_subplot(111)
         ax.set_xlabel('Sample Index (sorted by error)')
         ax.set_ylabel('Error')
         ax.set_title('Sorted prediction error distribution')
     
-    if PLOT_ONE_TRAJECTORY:        
+    if PLOT_ONE_TRAJECTORY:   
+        plot_count = 0
+        filename_list = ['ct_vel', 'GM', 'idm']
         fig_xy_vs_t = plt.figure()
-        ax1 = fig_xy_vs_t.add_subplot(211, aspect='equal') 
-        ax2 = fig_xy_vs_t.add_subplot(212, aspect='equal')
-        axs = [ax1, ax2]
-        ax2.set_xlabel('t')
-        ax1.set_ylabel('x')
-        ax2.set_ylabel('y')
-        ax1.set_title('Plot of x, y vs t of one trajectory compared to the predictions')
+        ax1 = fig_xy_vs_t.add_subplot(311) 
+        ax2 = fig_xy_vs_t.add_subplot(312)
+        ax3 = fig_xy_vs_t.add_subplot(313)
+        axs = [ax1, ax2, ax3]
+        ax3.set_xlabel ("t")
+        
+        
           
     for i, filename in enumerate(os.listdir(folder_path)):
         file_path = os.path.join(folder_path, filename)
@@ -67,22 +69,24 @@ def run_ADE_eval(folder_path, PLOT_ERROR_DIST=True, PLOT_ONE_TRAJECTORY = True, 
                 data_pred = PRED[PRED[:,3] == float(veh_id)] # t_start,dt,n_pred,i | xs,ys,dxs, dys
                 
                 ### we might want to visualize the trajectories a bit 
-                if (veh_id == veh_ids[2]) and (filename == 'pred_idm.csv'):
-                   axs[0].set_ylim(91.25, 93.50)
-                   for k in range(2):
-                        axs[k].plot(txys_gt[:,0], txys_gt[:,k+1], '-o',markersize=3, label = 'GT')
-                        asp = np.diff(axs[0].get_xlim())[0] / np.diff(axs[0].get_ylim())[0]
-                        axs[k].set_aspect("auto")
-                        
-                        for j in range(data_pred.shape[0]):
-                            if j % 10 == 0:
-                                t_start = data_pred[j,0]
-                                ts = np.linspace(t_start, t_start + hrz, n_pred)
-                                xs = data_pred[j, 4+ n_pred * k: 4+ n_pred * (k+1)]
-                                sigs = data_pred[j, 4+ +n_pred * 2: 4+n_pred * 3]
-                                axs[k].scatter(ts, xs, s = 5, marker = '*')
-                                axs[k].fill_between(ts, xs - sigs , xs + sigs, color='gray', alpha=0.1)
+                if PLOT_ONE_TRAJECTORY and (veh_id == veh_ids[2]) and filename[5:-4] in filename_list:
                     
+                    axs[plot_count].set_ylim([-180,0])
+                    axs[plot_count].plot(txys_gt[:,0], txys_gt[:,2], '-o',markersize=7, label = 'GT')
+                    asp = np.diff(axs[0].get_xlim())[0] / np.diff(axs[0].get_ylim())[0]
+                    axs[plot_count].set_aspect("auto")
+                    axs[plot_count].set_title(filename[5:-4])
+                    axs[plot_count].set_ylabel("longitute (m)")
+                    axs[plot_count].legend()
+                    for j in range(data_pred.shape[0]):
+                        if j % 10 == 0:
+                            t_start = data_pred[j,0]
+                            ts = np.linspace(t_start, t_start + hrz, n_pred)
+                            xs = data_pred[j, 4+ n_pred: 4+ n_pred * 2]
+                            sigs = data_pred[j, 4+ +n_pred * 2: 4+n_pred * 3]
+                            axs[plot_count].scatter(ts, xs, s = 4, marker = '*')
+                            axs[plot_count].fill_between(ts, xs - sigs , xs + sigs, color='gray', alpha=0.1)
+                    plot_count += 1
                 
                 if RUN_CALCULATION:
                     for txy_gt in txys_gt:
@@ -120,16 +124,17 @@ def run_ADE_eval(folder_path, PLOT_ERROR_DIST=True, PLOT_ONE_TRAJECTORY = True, 
                 if PLOT_ERROR_DIST:
                     preds_pw_mean_std = np.array(preds_pw_mean_std)
                     preds_pw_mean_std_sorted = preds_pw_mean_std[preds_pw_mean_std[:, 0].argsort()] 
-                    print(preds_pw_mean_std_sorted.shape, preds_all.shape)
                     # plt.errorbar(x, preds_pw_mean_std_sorted[:,0], yerr=preds_pw_mean_std_sorted[:,1], fmt='-', capsize=5, markersize=5)
-                    x = np.arange(preds_pw_mean_std_sorted.shape[0])
+                    x = np.linspace(0,1,preds_pw_mean_std_sorted.shape[0])
                     # plt.fill_between(x, preds_pw_mean_std_sorted[:,0] - preds_pw_mean_std_sorted[:,1] , preds_pw_mean_std_sorted[:,0] + preds_pw_mean_std_sorted[:,1], color='gray', alpha=0.5)
                     # ax.plot(x, preds_pw_mean_std_sorted[:,0], '-o', markersize=3,label = filename[:-4])
                     preds_all = np.array(preds_all)
-                    preds_all_sorted = preds_all[preds_all.argsort()]
-                    x = np.arange(preds_all_sorted.shape[0])
-                    ax.plot(x, preds_all_sorted, '-o', markersize=3,label = filename[:-4])
+                    print(preds_pw_mean_std_sorted.shape, preds_all.shape)
                     
+                    preds_all_sorted = preds_all[preds_all.argsort()]
+                    x = np.linspace(0,1,preds_all_sorted.shape[0])
+                    ax.plot(x, preds_all_sorted, '-o', markersize=3,label = filename[:-4])
+                    ax.set_xlabel("sorted error index percentile")
                     ax.legend()
                 
             
@@ -203,7 +208,7 @@ def run_FDE_eval(folder_path):
                 running_l2e_all += running_l2e_pt
                 counts_all += pred.shape[0]
                 
-            print("avg ade for all final points of " + file_path +" =  ",running_l2e_all/ counts_all)
+            print("avg ADE for all final points of " + file_path +" =  ",running_l2e_all/ counts_all)
                     
             
         
@@ -229,7 +234,8 @@ def run_FDE_eval(folder_path):
 
 
 if __name__ == '__main__':
-    result_folder = "t_jun_pred_idm_results/"
+    result_folder = "t_jun_pred_idm_af_1_results/"
 
-    run_ADE_eval(result_folder, RUN_CALCULATION =  True) 
+    run_ADE_eval(result_folder, RUN_CALCULATION =  True, PLOT_ONE_TRAJECTORY=True, PLOT_ERROR_DIST=True) 
+    run_FDE_eval(result_folder)
     
