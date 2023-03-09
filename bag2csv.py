@@ -32,9 +32,10 @@ def bag2csv(filename, directory, isGT):
     for topic, msg, t in bag.read_messages():
       if topic[:28] == '/region/all_cars_predictions':
         pred_topics.add(topic)
-    
+    print(pred_topics)
     for tp in pred_topics:
       if len(tp) == 28:
+        
         fn = 'pred_ct_vel'
       else:
         fn = 'pred'+ tp[28:]
@@ -99,12 +100,12 @@ def bag2csv(filename, directory, isGT):
 
 if __name__ == "__main__":
 
-  filename = "t_jun_pred_idm_af_1"
+
+  filename = "debug_buffer_filtered"
   directory = "/home/xliu/Documents/ros_record/"
 
   bag2csv(filename, directory, isGT = True)
   bag2csv(filename, directory, isGT = False)
-  
 
 
       

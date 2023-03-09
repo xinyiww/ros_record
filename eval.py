@@ -2,7 +2,7 @@ import sys
 import os
 import csv
 import math
-import rosbag
+# import rosbag
 import rospy
 import copy
 import numpy as np
@@ -234,7 +234,7 @@ def run_FDE_eval(folder_path):
 
 
 if __name__ == '__main__':
-    result_folder = "t_jun_pred_idm_af_1_results/"
+    result_folder = "t_jun_pred_combo_results/"
 
     run_ADE_eval(result_folder, RUN_CALCULATION =  True, PLOT_ONE_TRAJECTORY=True, PLOT_ERROR_DIST=True) 
     run_FDE_eval(result_folder)

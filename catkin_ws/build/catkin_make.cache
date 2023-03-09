@@ -1,2 +1,0 @@
-rosbag_to_csv
--DCATKIN_DEVEL_PREFIX=/home/xliu/Documents/ros_record/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/xliu/Documents/ros_record/catkin_ws/install -G Unix Makefiles
