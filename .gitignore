@@ -1,4 +1,5 @@
 # Ignore .bag files
 *.bag
+*.csv
 
 

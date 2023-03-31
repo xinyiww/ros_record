@@ -11,15 +11,12 @@ from dataImport import *
 import matplotlib.pyplot as plt
 from bag2csv_local import *
 
-def run_ADE_eval_all(folder_path, RUN_CALCULATION =  True): 
+def run_ADE_eval_all(folder_path, gt_file, RUN_CALCULATION =  True): 
     GT = []
     ades = {}
-    for i, fn in enumerate(os.listdir(folder_path)):
-        fp = os.path.join(folder_path, fn)
-        if fn[:2] == 'gt':
-            GT = getGTData(fp)
-            # print(GT)
-            veh_ids = np.sort(np.unique(GT[:,1])).astype(int)
+    gt_fp = os.path.join(folder_path, gt_file)
+    GT = getGTData(gt_fp)
+    veh_ids = np.sort(np.unique(GT[:,1])).astype(int)
             
     # print(veh_ids)
     
@@ -185,7 +182,7 @@ if __name__ == '__main__':
     
 
     # Get command line arguments
-    argv = sys.argv
+    gt_file = sys.argv[1]
 
     # Print the list of arguments
 
@@ -195,12 +192,12 @@ if __name__ == '__main__':
     save_dir = "/home/xliu/Documents/ros_record/random_search"
 
     # 
-    ades = run_ADE_eval_all( save_dir, RUN_CALCULATION =  True) 
+    ades = run_ADE_eval_all( save_dir, gt_file, RUN_CALCULATION =  True) 
     
     # with open('/home/xliu/Documents/ros_record/random_search/ade.txt','w') as tfile:
 	#     tfile.write('\n'.join(ades))
     print(ades)
-    with open('/home/xliu/Documents/ros_record/random_search/ade.csv', 'a', newline='') as csvfile:
+    with open('/home/xliu/Documents/ros_record/random_search/ade_'+gt_file, 'a', newline='') as csvfile:
         ade_writer = csv.writer(csvfile, delimiter=' ') 
         for i in ades.keys():
             ade_writer.writerow([str(i), ades[i]])

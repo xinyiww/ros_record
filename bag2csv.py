@@ -1,11 +1,8 @@
 #!/usr/bin/env python
-import sys
+
 import os
 import csv
-import math
 import rosbag
-import rospy
-import copy
 
 import numpy as np
 
@@ -101,7 +98,7 @@ def bag2csv(filename, directory, isGT):
 if __name__ == "__main__":
 
 
-  filename = "debug_buffer_filtered"
+  filename = "lane_change_pred_1_filtered"
   directory = "/home/xliu/Documents/ros_record/"
 
   bag2csv(filename, directory, isGT = True)
