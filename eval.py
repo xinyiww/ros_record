@@ -48,9 +48,6 @@ def run_ADE_eval(folder_path, PLOT_ERROR_DIST=True, PLOT_ONE_TRAJECTORY = True, 
             dt, n_pred = PRED[0,1:3]
             n_pred = int(n_pred)
             hrz = dt * n_pred
-            
-            # if filename == "pred_GM.csv":
-            #     PRED[:,0] += dt
 
             running_l2e_all = 0
             counts_all = 0
@@ -234,7 +231,8 @@ def run_FDE_eval(folder_path):
 
 
 if __name__ == '__main__':
-    result_folder = "lane_change_pred_1_filtered_results/"
+    # result_folder = "lane_change_pred_1_filtered_results/"
+    result_folder = sys.argv[1]
 
     run_ADE_eval(result_folder, RUN_CALCULATION =  True, PLOT_ONE_TRAJECTORY=True, PLOT_ERROR_DIST=True) 
     run_FDE_eval(result_folder)

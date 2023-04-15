@@ -3,6 +3,7 @@
 import os
 import csv
 import rosbag
+import sys
 
 import numpy as np
 
@@ -97,9 +98,10 @@ def bag2csv(filename, directory, isGT):
 
 if __name__ == "__main__":
 
-
-  filename = "lane_change_pred_1_filtered"
-  directory = "/home/xliu/Documents/ros_record/"
+  filename = sys.argv[1]
+  directory = sys.argv[2]
+  # filename = "lane_change_pred_1_filtered"
+  # directory = "/home/xliu/Documents/ros_record/"
 
   bag2csv(filename, directory, isGT = True)
   bag2csv(filename, directory, isGT = False)
